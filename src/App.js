@@ -1,15 +1,11 @@
-import {Container, Row, Col, ProgressBar} from 'react-bootstrap';
 import './App.css';
+import Timer from './components/Timer';
 
 function App() {
   return (
-    <Container fluid>
-      <Row>
-        <Col>
-        <ProgressBar animated now={60} />
-        </Col>
-      </Row>
-    </Container>
+    <div>
+      <Timer />
+    </div>
   );
 }
 

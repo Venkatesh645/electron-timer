@@ -8,7 +8,7 @@ function createWindow() {
   const win = new BrowserWindow({
     autoHideMenuBar: true,
     width: 200,
-    height: 100,
+    height: 60,
     webPreferences: {
       nodeIntegration: true,
     },
@@ -22,9 +22,9 @@ function createWindow() {
       : `file://${path.join(__dirname, '../build/index.html')}`
   );
   // Open the DevTools.
-  if (isDev) {
-    win.webContents.openDevTools({ mode: 'detach' });
-  }
+  // if (isDev) {
+  //   win.webContents.openDevTools({ mode: 'detach' });
+  // }
 }
 
 // This method will be called when Electron has finished
