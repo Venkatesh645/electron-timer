@@ -3,3 +3,20 @@
   margin: 0;
   box-sizing: border-box;
 }
+
+.form-control:focus {
+  border-color: none !important;
+  box-shadow: none !important;
+}
+
+body {
+  font-size: 10px;
+}
+
+.increment-group button {
+  padding: 0;
+  margin-left: 1px;
+  margin-right: 1px;
+  padding-left: 1px;
+  padding-right: 1px;
+}
