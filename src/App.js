@@ -1,11 +1,15 @@
-import logo from './logo.svg';
+import {Container, Row, Col, ProgressBar} from 'react-bootstrap';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      sample
-    </div>
+    <Container fluid>
+      <Row>
+        <Col>
+        <ProgressBar animated now={60} />
+        </Col>
+      </Row>
+    </Container>
   );
 }
 
