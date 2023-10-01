@@ -8,25 +8,24 @@ function createWindow() {
   const win = new BrowserWindow({
     alwaysOnTop: true,
     autoHideMenuBar: true,
-    height: 50,
-    width: 100,
-    resizable: false,
+    height: 100,
+    width: 200,
     webPreferences: {
       nodeIntegration: true,
     },
   });
 
+  const pathValue = `${path.join(__dirname, 'build', 'index.html')}`;
+  console.log('isDev: ', isDev)
+  console.log('pathValue:', pathValue)
+
   // and load the index.html of the app.
-  // win.loadFile("index.html");
-  win.loadURL(
-    isDev
-      ? 'http://localhost:3000'
-      : `file://${path.join(__dirname, '../build/index.html')}`
-  );
-  // Open the DevTools.
-  // if (isDev) {
-  //   win.webContents.openDevTools({ mode: 'detach' });
-  // }
+  if (isDev) {
+    win.loadURL("http://localhost:30100")
+    win.webContents.openDevTools({ mode: 'detach' });
+  } else {
+    win.loadFile(pathValue);
+  }
 }
 
 // This method will be called when Electron has finished
@@ -43,13 +42,16 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.on('activate', () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
-  }
-});
+// app.on('activate', () => {
+//   if (BrowserWindow.getAllWindows().length === 0) {
+//     createWindow();
+//   }
+// });
 
-require('electron-reload')(__dirname, {
+if (isDev) {
+  require('electron-reload')(__dirname, {
     // Note that the path to electron may vary according to the main file
     electron: require(`${__dirname}/node_modules/electron`)
-});
+  });
+}
+

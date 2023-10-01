@@ -62,7 +62,10 @@ export default function Timer() {
 
   const updateProgressBar = (selectedSeconds, totalTimeDiffValue) => {
     const currentTimeInsec = momentObj.duration(momentObj().format("HH:mm")).asSeconds()
-    if (currentTimeInsec >= selectedSeconds) clearInterval(timerHandler)
+    if (currentTimeInsec >= selectedSeconds) {
+      clearInterval(timerHandler)
+
+    }
     const currentTimeDiffValue = selectedSeconds - currentTimeInsec;
     const value = (currentTimeDiffValue / totalTimeDiffValue)
     const valueInPercent = value * 100;
