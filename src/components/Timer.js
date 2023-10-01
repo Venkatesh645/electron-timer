@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { ProgressBar } from 'react-bootstrap'
 import moment from 'moment';
 
 let timerHandler = null;
+let notificationDebounceHandler = null;
 const momentObj = moment;
 
 const preSetIncrements = [
@@ -33,24 +34,17 @@ export default function Timer() {
   const [timeFieldValue, setTimeFieldValue] = useState(momentObj().format("HH:mm"));
   const [progressBarValue, setProgressBarValue] = useState(0);
 
-
-  useEffect(() => {
-    if (timeFieldValue) {
-      updateTimer()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timeFieldValue])
-
   const handleChange = (event) => {
     console.log('event.currentTarget.value', event.currentTarget.value)
-    setTimeFieldValue(event.currentTarget.value)
+    setTimeFieldValue(event.currentTarget.value);
+    updateTimer(event.currentTarget.value)
   }
 
-  const updateTimer = () => {
-    const selectedSeconds = momentObj.duration(timeFieldValue).asSeconds()
+
+  const updateTimer = (selectTimeValue) => {
+    const selectedSeconds = momentObj.duration(selectTimeValue).asSeconds()
     const currentTimeInsec = momentObj.duration(momentObj().format("HH:mm")).asSeconds()
     const totalTimeDiffValue = selectedSeconds - currentTimeInsec;
-
     if (timerHandler) {
       clearInterval(timerHandler)
     };
@@ -60,11 +54,18 @@ export default function Timer() {
     }, 2000)
   }
 
+  const showNotificationFn = () =>{
+    clearTimeout(notificationDebounceHandler);
+    notificationDebounceHandler = setTimeout(() =>{
+      window.electronAPI.timeUp()
+    }, 4000)
+  }
+
   const updateProgressBar = (selectedSeconds, totalTimeDiffValue) => {
     const currentTimeInsec = momentObj.duration(momentObj().format("HH:mm")).asSeconds()
     if (currentTimeInsec >= selectedSeconds) {
-      clearInterval(timerHandler)
-
+      clearInterval(timerHandler);
+      showNotificationFn()
     }
     const currentTimeDiffValue = selectedSeconds - currentTimeInsec;
     const value = (currentTimeDiffValue / totalTimeDiffValue)
@@ -90,7 +91,7 @@ export default function Timer() {
   }
 
   const addIncrementsHandler = (item) => {
-
+    
   }
 
   return (

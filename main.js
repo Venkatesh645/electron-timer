@@ -1,6 +1,5 @@
 const path = require('path');
-
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain, Notification } = require('electron');
 const isDev = require('electron-is-dev');
 
 function createWindow() {
@@ -11,9 +10,19 @@ function createWindow() {
     height: 100,
     width: 200,
     webPreferences: {
-      nodeIntegration: true,
-    },
+      preload: path.join(__dirname, 'preload.js')
+    }
   });
+
+  ipcMain.on('time-up', (event, title) => {
+    const notificationInstance = new Notification({
+      title: "Times Up!",
+      timeoutType: 'never',
+      icon: "images.png"
+    });
+    notificationInstance.on('click', () =>{} )
+    notificationInstance.show()
+  })
 
   const pathValue = `${path.join(__dirname, 'build', 'index.html')}`;
   console.log('isDev: ', isDev)
