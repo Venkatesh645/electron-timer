@@ -4,6 +4,15 @@
   box-sizing: border-box;
 }
 
+body {
+  background-color: transparent;
+}
+
+#root {
+  background-color: aliceblue;
+  border: 1px solid black;
+}
+
 .form-control:focus {
   border-color: none !important;
   box-shadow: none !important;
@@ -19,4 +28,9 @@ body {
   margin-right: 1px;
   padding-left: 1px;
   padding-right: 1px;
+}
+
+.progress-bar-div {
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
 }

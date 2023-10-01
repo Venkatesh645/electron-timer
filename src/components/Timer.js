@@ -12,14 +12,6 @@ const preSetIncrements = [
     value: 1
   },
   {
-    label: '+5',
-    value: 5
-  },
-  {
-    label: '+20',
-    value: 20
-  },
-  {
     label: '+30',
     value: 30
   },
@@ -54,9 +46,9 @@ export default function Timer() {
     }, 2000)
   }
 
-  const showNotificationFn = () =>{
+  const showNotificationFn = () => {
     clearTimeout(notificationDebounceHandler);
-    notificationDebounceHandler = setTimeout(() =>{
+    notificationDebounceHandler = setTimeout(() => {
       window.electronAPI.timeUp()
     }, 4000)
   }
@@ -84,20 +76,20 @@ export default function Timer() {
     }
   }
 
-  const resetHandler = () => {
-    setTimeFieldValue(momentObj().format("HH:mm"))
-    setProgressBarValue(0)
-    clearInterval(timerHandler)
-  }
+  // const resetHandler = () => {
+  //   setTimeFieldValue(momentObj().format("HH:mm"))
+  //   setProgressBarValue(0)
+  //   clearInterval(timerHandler)
+  // }
 
   const addIncrementsHandler = (item) => {
-    
+
   }
 
   return (
     <div>
-      <ProgressBar style={{ borderRadius: 0, border: 'solid black 1px' }} animated variant={getVarientValue()} now={progressBarValue} max={100} key={1} />
-      <div className='d-flex justify-content-center align-items-center'>
+      <ProgressBar style={{ borderRadius: 0, borderBottom: 'solid rgb(100, 97, 97) 1px' }} animated variant={getVarientValue()} now={progressBarValue} max={100} key={1} className='progress-bar-div' />
+      <div className='d-flex justify-content-center align-items-center border border-bottom'>
         <input
           style={{ display: 'none' }}
           value={timeFieldValue}
@@ -105,15 +97,17 @@ export default function Timer() {
           ref={timeFieldRef}
           type='time'
         />
-        <p
-          className='flex-grow-1 bg-light h-100'
+        <b
           style={{ margin: 0, cursor: "pointer" }}
           onClick={() => {
             timeFieldRef.current.showPicker()
-          }}>{timeFieldValue}</p>
+          }}>
+          {timeFieldValue}
+        </b>
 
-        <button onClick={resetHandler}>@</button>
+        {/* <button onClick={resetHandler}>@</button> */}
       </div>
+
       <div className='d-flex align-items-center increment-group'>
         {preSetIncrements.map((item) => {
           return <button onClick={() => addIncrementsHandler(item)} key={item.label}>{item.label}</button>

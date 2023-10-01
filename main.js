@@ -7,8 +7,12 @@ function createWindow() {
   const win = new BrowserWindow({
     alwaysOnTop: true,
     autoHideMenuBar: true,
-    height: 100,
-    width: 200,
+    height: 50,
+    width: 100,
+    frame: false,
+    minimizable: false,
+    maximizable: false,
+    transparent: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     }
