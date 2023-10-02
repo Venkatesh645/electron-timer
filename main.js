@@ -16,10 +16,10 @@ function loadRendererWindow(winInstance, opt) {
       url.searchParams.append(key, value);
     }
     winInstance.loadURL(url.href, opt)
+    winInstance.webContents.openDevTools({ mode: 'detach' });
   } else {
     winInstance.loadFile(pathValue, opt);
   }
-  winInstance.webContents.openDevTools({ mode: 'detach' });
 }
 
 function createWindow() {
