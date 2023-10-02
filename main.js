@@ -1,44 +1,94 @@
 const path = require('path');
 const { app, BrowserWindow, ipcMain, Notification } = require('electron');
 const isDev = require('electron-is-dev');
+const sound = require('sound-play');
+const constants = require('./src/utils/constants');
+
+const pathValue = `${path.join(__dirname, 'build', 'index.html')}`;
+const options = {
+  query: { windowType: null }
+}
+
+function loadRendererWindow(winInstance, opt) {
+  if (isDev) {
+    const url = new URL("http://localhost:30100");
+    for (let [key, value] of Object.entries(options.query)) {
+      url.searchParams.append(key, value);
+    }
+    winInstance.loadURL(url.href, opt)
+  } else {
+    winInstance.loadFile(pathValue, opt);
+  }
+  winInstance.webContents.openDevTools({ mode: 'detach' });
+}
 
 function createWindow() {
   // Create the browser window.
+  const { width, height } = getScreenDimensions()
+  const winWidth = 120;
+  const winHeight = 50;
   const win = new BrowserWindow({
     alwaysOnTop: true,
     autoHideMenuBar: true,
-    height: 50,
-    width: 100,
+    width: winWidth,
+    height: winHeight,
     frame: false,
     minimizable: false,
     maximizable: false,
     transparent: true,
+    x: width - winWidth,
+    y: height - winHeight + 20,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     }
   });
 
   ipcMain.on('time-up', (event, title) => {
-    const notificationInstance = new Notification({
-      title: "Times Up!",
-      timeoutType: 'never',
-      icon: "images.png"
-    });
-    notificationInstance.on('click', () =>{} )
-    notificationInstance.show()
-  })
+    const { width, height } = getScreenDimensions()
+    const childWidth = winWidth;
+    const childHeight = winHeight + 50;
+    const child = new BrowserWindow({
+      parent: win,
+      modal: true,
+      show: false,
+      frame: false,
+      minimizable: false,
+      maximizable: false,
+      height: childHeight,
+      width: winWidth,
+      transparent: true,
+      x: width - childWidth,
+      y: height - childHeight - winHeight,
+      webPreferences: {
+        preload: path.join(__dirname, 'preload.js')
+      }
+    })
 
-  const pathValue = `${path.join(__dirname, 'build', 'index.html')}`;
-  console.log('isDev: ', isDev)
-  console.log('pathValue:', pathValue)
+    options.query.windowType = constants.NOTIFICATION_TYPE
+    loadRendererWindow(child, options);
+
+    ipcMain.on('clear-notification', (event, title) => {
+      child.hide();
+    })
+
+    child.once('ready-to-show', () => {
+      child.show()
+      child.webContents.openDevTools({ mode: 'detach' });
+    })
+  });
+
+
 
   // and load the index.html of the app.
-  if (isDev) {
-    win.loadURL("http://localhost:30100")
-    win.webContents.openDevTools({ mode: 'detach' });
-  } else {
-    win.loadFile(pathValue);
-  }
+  options.query.windowType = constants.TIMER_TYPE
+  loadRendererWindow(win, options);
+}
+
+
+function getScreenDimensions() {
+  const { screen } = require('electron');
+  const primaryDisplay = screen.getPrimaryDisplay()
+  return primaryDisplay.workAreaSize
 }
 
 // This method will be called when Electron has finished

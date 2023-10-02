@@ -49,7 +49,7 @@ export default function Timer() {
   const showNotificationFn = () => {
     clearTimeout(notificationDebounceHandler);
     notificationDebounceHandler = setTimeout(() => {
-      window.electronAPI.timeUp()
+      window?.electronAPI?.timeUp()
     }, 4000)
   }
 
@@ -83,12 +83,12 @@ export default function Timer() {
   // }
 
   const addIncrementsHandler = (item) => {
-
+    showNotificationFn()
   }
 
   return (
     <div>
-      <ProgressBar style={{ borderRadius: 0, borderBottom: 'solid rgb(100, 97, 97) 1px' }} animated variant={getVarientValue()} now={progressBarValue} max={100} key={1} className='progress-bar-div' />
+      <ProgressBar style={{ borderRadius: 0, borderBottom: 'solid rgb(100, 97, 97) 1px' }} animated variant={getVarientValue()} now={progressBarValue} max={100} key={1} className='draggable-div' />
       <div className='d-flex justify-content-center align-items-center border border-bottom'>
         <input
           style={{ display: 'none' }}

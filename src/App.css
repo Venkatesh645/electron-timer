@@ -30,7 +30,7 @@ body {
   padding-right: 1px;
 }
 
-.progress-bar-div {
+.draggable-div {
   -webkit-user-select: none;
   -webkit-app-region: drag;
 }
