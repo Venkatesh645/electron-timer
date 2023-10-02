@@ -44,6 +44,7 @@ function createWindow() {
   });
 
   ipcMain.on('time-up', (event, title) => {
+    let soundIntervalHandler = null;
     const { width, height } = getScreenDimensions()
     const childWidth = winWidth;
     const childHeight = winHeight + 50;
@@ -68,12 +69,15 @@ function createWindow() {
     loadRendererWindow(child, options);
 
     ipcMain.on('clear-notification', (event, title) => {
+      if (soundIntervalHandler) clearInterval(soundIntervalHandler)
       child.hide();
-    })
+    });
 
     child.once('ready-to-show', () => {
-      child.show()
-      child.webContents.openDevTools({ mode: 'detach' });
+      child.show();
+      soundIntervalHandler = setInterval(() => {
+        sound.play(path.resolve(__dirname, 'yes.mp3'));
+      }, 3000);
     })
   });
 
