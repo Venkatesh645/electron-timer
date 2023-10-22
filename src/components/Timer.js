@@ -1,22 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { ProgressBar } from 'react-bootstrap'
 import moment from 'moment';
 
 let timerHandler = null;
+let notificationDebounceHandler = null;
 const momentObj = moment;
 
 const preSetIncrements = [
   {
     label: '+1',
     value: 1
-  },
-  {
-    label: '+5',
-    value: 5
-  },
-  {
-    label: '+20',
-    value: 20
   },
   {
     label: '+30',
@@ -33,24 +26,17 @@ export default function Timer() {
   const [timeFieldValue, setTimeFieldValue] = useState(momentObj().format("HH:mm"));
   const [progressBarValue, setProgressBarValue] = useState(0);
 
-
-  useEffect(() => {
-    if (timeFieldValue) {
-      updateTimer()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [timeFieldValue])
-
   const handleChange = (event) => {
     console.log('event.currentTarget.value', event.currentTarget.value)
-    setTimeFieldValue(event.currentTarget.value)
+    setTimeFieldValue(event.currentTarget.value);
+    updateTimer(event.currentTarget.value)
   }
 
-  const updateTimer = () => {
-    const selectedSeconds = momentObj.duration(timeFieldValue).asSeconds()
+
+  const updateTimer = (selectTimeValue) => {
+    const selectedSeconds = momentObj.duration(selectTimeValue).asSeconds()
     const currentTimeInsec = momentObj.duration(momentObj().format("HH:mm")).asSeconds()
     const totalTimeDiffValue = selectedSeconds - currentTimeInsec;
-
     if (timerHandler) {
       clearInterval(timerHandler)
     };
@@ -60,9 +46,19 @@ export default function Timer() {
     }, 2000)
   }
 
+  const showNotificationFn = () => {
+    clearTimeout(notificationDebounceHandler);
+    notificationDebounceHandler = setTimeout(() => {
+      window?.electronAPI?.timeUp()
+    }, 4000)
+  }
+
   const updateProgressBar = (selectedSeconds, totalTimeDiffValue) => {
     const currentTimeInsec = momentObj.duration(momentObj().format("HH:mm")).asSeconds()
-    if (currentTimeInsec >= selectedSeconds) clearInterval(timerHandler)
+    if (currentTimeInsec >= selectedSeconds) {
+      clearInterval(timerHandler);
+      showNotificationFn()
+    }
     const currentTimeDiffValue = selectedSeconds - currentTimeInsec;
     const value = (currentTimeDiffValue / totalTimeDiffValue)
     const valueInPercent = value * 100;
@@ -80,20 +76,20 @@ export default function Timer() {
     }
   }
 
-  const resetHandler = () => {
-    setTimeFieldValue(momentObj().format("HH:mm"))
-    setProgressBarValue(0)
-    clearInterval(timerHandler)
-  }
+  // const resetHandler = () => {
+  //   setTimeFieldValue(momentObj().format("HH:mm"))
+  //   setProgressBarValue(0)
+  //   clearInterval(timerHandler)
+  // }
 
   const addIncrementsHandler = (item) => {
-
+    showNotificationFn()
   }
 
   return (
     <div>
-      <ProgressBar style={{ borderRadius: 0, border: 'solid black 1px' }} animated variant={getVarientValue()} now={progressBarValue} max={100} key={1} />
-      <div className='d-flex justify-content-center align-items-center'>
+      <ProgressBar style={{ borderRadius: 0, borderBottom: 'solid rgb(100, 97, 97) 1px' }} animated variant={getVarientValue()} now={progressBarValue} max={100} key={1} className='draggable-div' />
+      <div className='d-flex justify-content-center align-items-center border border-bottom'>
         <input
           style={{ display: 'none' }}
           value={timeFieldValue}
@@ -101,15 +97,17 @@ export default function Timer() {
           ref={timeFieldRef}
           type='time'
         />
-        <p
-          className='flex-grow-1 bg-light h-100'
+        <b
           style={{ margin: 0, cursor: "pointer" }}
           onClick={() => {
             timeFieldRef.current.showPicker()
-          }}>{timeFieldValue}</p>
+          }}>
+          {timeFieldValue}
+        </b>
 
-        <button onClick={resetHandler}>@</button>
+        {/* <button onClick={resetHandler}>@</button> */}
       </div>
+
       <div className='d-flex align-items-center increment-group'>
         {preSetIncrements.map((item) => {
           return <button onClick={() => addIncrementsHandler(item)} key={item.label}>{item.label}</button>
