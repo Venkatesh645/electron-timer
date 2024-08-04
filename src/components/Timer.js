@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react'
 import { ProgressBar } from 'react-bootstrap'
 import moment from 'moment';
+import CalenderEvents from './CalenderEvents';
 
 let timerHandler = null;
 let notificationDebounceHandler = null;
@@ -88,7 +89,8 @@ export default function Timer() {
 
   return (
     <div>
-      <ProgressBar style={{ borderRadius: 0, borderBottom: 'solid rgb(100, 97, 97) 1px' }} animated variant={getVarientValue()} now={progressBarValue} max={100} key={1} className='draggable-div' />
+      <ProgressBar style={{ borderRadius: 0, borderBottom: 'solid rgb(100, 97, 97) 1px', height: '12px' }} animated variant={getVarientValue()} now={progressBarValue} max={100} key={1} className='draggable-div' />
+      <CalenderEvents />
       <div className='d-flex justify-content-center align-items-center border border-bottom'>
         <input
           style={{ display: 'none' }}
@@ -98,7 +100,7 @@ export default function Timer() {
           type='time'
         />
         <b
-          style={{ margin: 0, cursor: "pointer" }}
+          style={{ margin: 0, cursor: "pointer", fontSize: '8px', fontWeight: '900' }}
           onClick={() => {
             timeFieldRef.current.showPicker()
           }}>
@@ -108,11 +110,11 @@ export default function Timer() {
         {/* <button onClick={resetHandler}>@</button> */}
       </div>
 
-      <div className='d-flex align-items-center increment-group'>
+      {/* <div className='d-flex align-items-center increment-group'>
         {preSetIncrements.map((item) => {
           return <button onClick={() => addIncrementsHandler(item)} key={item.label}>{item.label}</button>
         })}
-      </div>
+      </div> */}
     </div>
   )
 }

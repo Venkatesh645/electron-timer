@@ -25,8 +25,8 @@ function loadRendererWindow(winInstance, opt) {
 function createWindow() {
   // Create the browser window.
   const { width, height } = getScreenDimensions()
-  const winWidth = 120;
-  const winHeight = 50;
+  const winWidth = 150;
+  const winHeight = 60;
   const win = new BrowserWindow({
     alwaysOnTop: true,
     autoHideMenuBar: true,
@@ -37,7 +37,7 @@ function createWindow() {
     maximizable: false,
     transparent: true,
     x: width - winWidth,
-    y: height - winHeight + 20,
+    y: height - winHeight + 10,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     }

@@ -22,8 +22,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dev": "concurrently -k \"npm start\" \"electron .\"",
-    "prod": "cross-env ELECTRON_IS_DEV=false  electron ."
+    "dev": "concurrently -k \"flask --app server run -p 37109 \" \"npm start\" \"electron .\"",
+    "prod": "concurrently -k  \"flask --app server run -p 37109 \" \"cross-env ELECTRON_IS_DEV=false electron .\""
   },
   "eslintConfig": {
     "extends": [
