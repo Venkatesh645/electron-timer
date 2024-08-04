@@ -71,7 +71,7 @@ function CalenderEvents() {
     if (currentEvent) {
       const currentEventStart = moment(currentEvent.start).format("hh:mm A")
       const currentEventEnd = moment(currentEvent.end).format("hh:mm A")
-      const currentEventSubject = truncateString(currentEvent.subject, 12)
+      const currentEventSubject = currentEvent.subject
       return <div style={{ backgroundColor: '#d1ebd2', height: '15px', overflow: 'hidden' }}>
         {currentEventStart} - {currentEventEnd} : {currentEventSubject}
       </div>
