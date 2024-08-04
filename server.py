@@ -49,13 +49,18 @@ def get_events():
 
 @app.route("/")
 def hello_world():
-    print("========START========")
-    pythoncom.CoInitialize()
-    events = get_events()
-    print(events)
-    pythoncom.CoUninitialize()
-    print("========END========")
-    return events
+    try:
+        print("========START========")
+        pythoncom.CoInitialize()
+        events = get_events()
+        print(events)
+        pythoncom.CoUninitialize()
+        print("========END========")
+        return events
+    except Exception as error:
+        print(error)
+        return []
+    
 
 # resp = get_events()
 # print(resp)
