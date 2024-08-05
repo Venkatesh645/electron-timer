@@ -51,12 +51,12 @@ function CalenderEvents() {
   }
 
   useEffect(() => {
-    const fifteenMinutes = 15 * 60 * 1000;
+    const fiveMinutes = 5 * 60 * 1000;
     getEvents()
     if (timerControl) clearInterval(timerControl)
     timerControl = setInterval(() => {
       getEvents()
-    }, fifteenMinutes)
+    }, fiveMinutes)
     return () => {
       if (timerControl) clearInterval(timerControl)
       return
