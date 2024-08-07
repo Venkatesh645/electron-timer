@@ -73,7 +73,7 @@ function CalenderEvents() {
       const currentEventEnd = moment(currentEvent.end).format("hh:mm A")
       const currentEventSubject = currentEvent.subject
       return <div style={{ backgroundColor: '#d1ebd2', height: '15px', overflow: 'hidden' }}>
-        {currentEventStart} - {currentEventEnd} : {currentEventSubject}
+        {currentEventStart}-{currentEventSubject}
       </div>
     }
     return <div>No current event</div>
@@ -86,7 +86,7 @@ function CalenderEvents() {
       const nextEventEnd = moment(nextEvent.end).format("hh:mm A")
       const nextEventSubject = nextEvent.subject
       return <div style={{ backgroundColor: 'lightyellow', height: '15px', overflow: 'hidden' }}>
-        {nextEventStart} - {nextEventEnd} : {nextEventSubject}
+        {nextEventStart}-{nextEventSubject}
       </div>
     }
     return <div>No next event</div>
