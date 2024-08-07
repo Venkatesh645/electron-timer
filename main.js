@@ -25,7 +25,7 @@ function loadRendererWindow(winInstance, opt) {
 function createWindow() {
   // Create the browser window.
   const { width, height } = getScreenDimensions()
-  const winWidth = 150;
+  const winWidth = 120;
   const winHeight = 60;
   const win = new BrowserWindow({
     alwaysOnTop: true,
