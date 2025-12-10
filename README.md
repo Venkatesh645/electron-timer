@@ -157,3 +157,15 @@ MIT © [Electron React Boilerplate](https://github.com/electron-react-boilerplat
 [github-tag-url]: https://github.com/electron-react-boilerplate/electron-react-boilerplate/releases/latest
 [stackoverflow-img]: https://img.shields.io/badge/stackoverflow-electron_react_boilerplate-blue.svg
 [stackoverflow-url]: https://stackoverflow.com/questions/tagged/electron-react-boilerplate
+
+## Building Portable Windows Executable
+
+To build a standalone portable executable for Windows:
+
+1. **Ensure Configuration**: The `package.json` is configured with `"portable"` in the `build.win.target` array.
+2. **Run Build**:
+   ```bash
+   npm run build
+   npx electron-builder build --win --x64 --publish never
+   ```
+3. **Output**: The executable will be located in `release/build/` (e.g., `release/build/ElectronReact 4.6.0.exe`).
