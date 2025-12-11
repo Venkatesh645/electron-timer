@@ -24,6 +24,63 @@ class AppUpdater {
 }
 
 let mainWindow: BrowserWindow | null = null;
+let successWindow: BrowserWindow | null = null;
+
+const createSuccessWindow = async () => {
+  if (successWindow) {
+    successWindow.focus();
+    return;
+  }
+
+  const RESOURCES_PATH = app.isPackaged
+    ? path.join(process.resourcesPath, 'assets')
+    : path.join(__dirname, '../../assets');
+
+  const getAssetPath = (...paths: string[]): string => {
+    return path.join(RESOURCES_PATH, ...paths);
+  };
+  const { width, height } = getScreenDimensions();
+  const mainWindowHeight = Math.floor(height * 0.1);
+
+  successWindow = new BrowserWindow({
+    alwaysOnTop: true,
+    show: false,
+    width: 600,
+    height: 400,
+    center: true,
+    roundedCorners: false,
+    icon: getAssetPath('icon.png'),
+    frame: false,
+    webPreferences: {
+      preload: app.isPackaged
+        ? path.join(__dirname, 'preload.js')
+        : path.join(__dirname, '../../.erb/dll/preload.js'),
+    },
+  });
+
+  successWindow.loadURL(`${resolveHtmlPath('index.html')}#/success`);
+
+  successWindow.on('ready-to-show', () => {
+    if (!successWindow) {
+      throw new Error('"successWindow" is not defined');
+    }
+    successWindow.show();
+  });
+
+  successWindow.on('closed', () => {
+    successWindow = null;
+  });
+};
+
+ipcMain.on('open-success-window', async () => {
+  createSuccessWindow();
+});
+
+ipcMain.on('close-success-window', async () => {
+  if (successWindow) {
+    successWindow.close();
+  }
+});
 
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
@@ -57,6 +114,9 @@ const installExtensions = async () => {
 };
 
 const createWindow = async () => {
+  const { width, height } = getScreenDimensions();
+  const mainWindowHeight = Math.floor(height * 0.1);
+
   if (isDebug) {
     await installExtensions();
   }
@@ -71,9 +131,13 @@ const createWindow = async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1024,
-    height: 728,
+    width: 400,
+    height: mainWindowHeight,
+    x: width - 400,
+    y: height - mainWindowHeight,
     icon: getAssetPath('icon.png'),
+    frame: false,
+    roundedCorners: false,
     webPreferences: {
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')
@@ -123,6 +187,12 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+
+function getScreenDimensions() {
+  const { screen } = require('electron');
+  const primaryDisplay = screen.getPrimaryDisplay()
+  return primaryDisplay.workAreaSize
+}
 
 app
   .whenReady()

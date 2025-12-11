@@ -21,6 +21,12 @@ const electronHandler = {
     once(channel: Channels, func: (...args: unknown[]) => void) {
       ipcRenderer.once(channel, (_event, ...args) => func(...args));
     },
+    openSuccessWindow() {
+      ipcRenderer.send('open-success-window');
+    },
+    closeSuccessWindow() {
+      ipcRenderer.send('close-success-window');
+    },
   },
 };
 
