@@ -24,12 +24,12 @@ jobs:
       - name: Install Node and NPM
         uses: actions/setup-node@v3
         with:
-          node-version: 22
+          node-version: 20.18.0
           cache: npm
 
       - name: Install and build
         run: |
-          npm install
+          npm ci
           npm run postinstall
           npm run build
 
