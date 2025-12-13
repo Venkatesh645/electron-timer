@@ -32,6 +32,10 @@ jobs:
           script: |
             const fs = require('fs');
             const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            if (!packageJson.version) {
+              core.setFailed('package.json is missing the "version" field.');
+              return;
+            }
             const version = `v${packageJson.version}`;
             core.setOutput('tag', version);
 
