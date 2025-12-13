@@ -2,13 +2,18 @@
 
 **Having issues installing? See our [debugging guide](https://github.com/electron-react-boilerplate/electron-react-boilerplate/issues/400)**
 
-## Starting Development
+## Local Development
 
-Start the app in the `dev` environment:
+1. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
+   *Note: This runs a `postinstall` script to ensure `release/app` dependencies are correctly set up.*
 
-```bash
-npm start
-```
+2. **Start Development Server**:
+   ```bash
+   npm start
+   ```
 
 ## Packaging for Production
 
@@ -21,18 +26,6 @@ npm run package
 ## Docs
 
 See our [docs and guides here](https://electron-react-boilerplate.js.org/docs/installation)
-
-
-## License
-
-MIT © [Electron React Boilerplate](https://github.com/electron-react-boilerplate)
-
-[github-actions-status]: https://github.com/electron-react-boilerplate/electron-react-boilerplate/workflows/Test/badge.svg
-[github-actions-url]: https://github.com/electron-react-boilerplate/electron-react-boilerplate/actions
-[github-tag-image]: https://img.shields.io/github/tag/electron-react-boilerplate/electron-react-boilerplate.svg?label=version
-[github-tag-url]: https://github.com/electron-react-boilerplate/electron-react-boilerplate/releases/latest
-[stackoverflow-img]: https://img.shields.io/badge/stackoverflow-electron_react_boilerplate-blue.svg
-[stackoverflow-url]: https://stackoverflow.com/questions/tagged/electron-react-boilerplate
 
 ## Recent Updates (Development Log)
 
@@ -51,14 +44,17 @@ MIT © [Electron React Boilerplate](https://github.com/electron-react-boilerplat
 - **Native Bindings**: Resolved `rspack-resolver` native binding errors by running `electron-rebuild`.
 - **Dependencies**: Fixed missing `bootstrap` CSS by installing the package and re-adding the import.
 
-## Building Portable Windows Executable
+## Release Workflow
 
-To build a standalone portable executable for Windows:
+### Automated Releases
+Releases are fully automated via GitHub Actions.
+1. **Trigger**: Push code to the `main` branch.
+2. **Build**: The workflow builds a portable Windows executable (`.exe`).
+3. **Publish**: The executable is automatically uploaded to a GitHub Release.
 
-1. **Ensure Configuration**: The `package.json` is configured with `"portable"` in the `build.win.target` array.
-2. **Run Build**:
-   ```bash
-   npm run build
-   npx electron-builder build --win --x64 --publish never
-   ```
-3. **Output**: The executable will be located in `release/build/` (e.g., `release/build/ElectronReact 4.6.0.exe`).
+### Tagging Mechanism
+- The release tag version is derived directly from the `version` field in `package.json` (e.g., `"version": "4.6.0"` -> `v4.6.0`).
+- **Important**: You must update the `version` in `package.json` before merging/pushing to `main`.
+- The workflow automatically checks if the tag exists:
+  - If it does not exist, it creates the tag `v<version>`.
+  - If it exists, it proceeds with the release for that tag.
