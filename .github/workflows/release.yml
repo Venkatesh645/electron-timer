@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   release:
-    runs-on: macos-latest
+    runs-on: windows-latest
 
     steps:
       - name: Checkout Code
