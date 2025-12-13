@@ -43,9 +43,10 @@ jobs:
               await github.rest.git.getRef({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                ref: `tags/${version}`
+                ref: `refs/tags/${version}`
               });
               console.log(`Tag ${version} already exists.`);
+              core.setOutput('tag_exists', 'true');
             } catch (error) {
               if (error.status === 404) {
                 console.log(`Creating tag ${version}...`);
@@ -55,17 +56,20 @@ jobs:
                   ref: `refs/tags/${version}`,
                   sha: context.sha
                 });
+                core.setOutput('tag_exists', 'false');
               } else {
                 throw error;
               }
             }
 
       - name: Build
+        if: steps.tag_check.outputs.tag_exists != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npm run build && npx electron-builder -- --win portable
+        run: npm run build && npx electron-builder -- --win --linux portable
 
       - name: Release
+        if: steps.tag_check.outputs.tag_exists != 'true'
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ steps.tag_check.outputs.tag }}
