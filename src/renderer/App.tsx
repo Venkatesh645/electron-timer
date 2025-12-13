@@ -9,17 +9,17 @@ const momentObj = moment;
 function Success() {
   return (
     <div
-      className="d-flex justify-content-center align-items-center"
+      className="d-flex justify-content-center align-items-center bg-dark text-white"
       style={{ height: '100vh', flexDirection: 'column' }}
     >
-      <div className="icon ringing-bell">🔔</div>
+      <div className="icon ringing-bell ">🔔</div>
       <div>Success</div>
       <button
         type="button"
         onClick={() => {
           window.electron.ipcRenderer.closeSuccessWindow();
         }}
-        className="mt-4 btn btn-primary"
+        style={{ width: '100%' }}
       >
         Close
       </button>
@@ -89,9 +89,16 @@ function Hello() {
   };
 
   return (
-    <div>
+    <div
+      className="d-flex bg-dark text-white"
+      style={{ height: '100vh', flexDirection: 'column' }}
+    >
       <ProgressBar
-        style={{ borderRadius: 0, borderBottom: 'solid rgb(100, 97, 97) 1px' }}
+        style={{
+          borderRadius: 0,
+          borderBottom: 'solid rgb(100, 97, 97) 1px',
+          backgroundColor: 'transparent',
+        }}
         animated
         variant={getVariantValue()}
         now={progressBarValue}
@@ -99,7 +106,7 @@ function Hello() {
         key={1}
         className="draggable-div"
       />
-      <div className="d-flex justify-content-center align-items-center border border-bottom">
+      <div className="d-flex justify-content-between align-items-center border border-bottom">
         <input
           style={{ display: 'none' }}
           value={timeFieldValue}
@@ -122,9 +129,32 @@ function Hello() {
         >
           {timeFieldValue}
         </b>
+        <div
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            alert('hello');
+          }}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              alert('hello');
+            }
+          }}
+        >
+          ⚙️
+        </div>
 
         {/* <button onClick={resetHandler}>@</button> */}
       </div>
+      {/* <button
+        type="button"
+        onClick={() => {
+          window.electron.ipcRenderer.openSuccessWindow();
+        }}
+      >
+        open
+      </button> */}
     </div>
   );
 }

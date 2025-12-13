@@ -31,7 +31,7 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            const packageJson = JSON.parse(fs.readFileSync('release/app/package.json', 'utf8'));
             if (!packageJson.version) {
               core.setFailed('package.json is missing the "version" field.');
               return;
@@ -69,4 +69,4 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ steps.tag_check.outputs.tag }}
-          files: release/build/*.exe
+          files: release/build/*

@@ -45,9 +45,10 @@ const createSuccessWindow = async () => {
   successWindow = new BrowserWindow({
     alwaysOnTop: true,
     show: false,
-    width: 600,
-    height: 400,
-    center: true,
+    width: 120,
+    height: mainWindowHeight,
+    x: width - 120,
+    y: height - mainWindowHeight-100,
     roundedCorners: false,
     icon: getAssetPath('icon.png'),
     frame: false,
@@ -97,7 +98,7 @@ const isDebug =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
 
 if (isDebug) {
-  require('electron-debug').default();
+  require('electron-debug').default({ devToolsMode: 'detach' });
 }
 
 const installExtensions = async () => {
@@ -131,11 +132,12 @@ const createWindow = async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: 400,
+    width: 120,
     height: mainWindowHeight,
-    x: width - 400,
+    x: width - 120,
     y: height - mainWindowHeight,
     icon: getAssetPath('icon.png'),
+    alwaysOnTop: true,
     frame: false,
     roundedCorners: false,
     webPreferences: {
