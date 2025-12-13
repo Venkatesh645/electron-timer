@@ -26,12 +26,14 @@ jobs:
         run: npm install
 
       - name: Check and Create Tag
+        id: tag_check
         uses: actions/github-script@v6
         with:
           script: |
             const fs = require('fs');
             const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
             const version = `v${packageJson.version}`;
+            core.setOutput('tag', version);
 
             try {
               await github.rest.git.getRef({
@@ -54,7 +56,13 @@ jobs:
               }
             }
 
-      - name: Build and Release
+      - name: Build
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npm run build && npx electron-builder -- --win portable --publish always
+        run: npm run build && npx electron-builder -- --win portable
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.tag_check.outputs.tag }}
+          files: release/build/*.exe
