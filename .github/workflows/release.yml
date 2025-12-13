@@ -3,7 +3,10 @@ name: Release
 on:
   push:
     branches:
-      - master
+      - main
+
+permissions:
+  contents: write
 
 jobs:
   release:
@@ -21,6 +24,35 @@ jobs:
 
       - name: Install Dependencies
         run: npm install
+
+      - name: Check and Create Tag
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            const version = `v${packageJson.version}`;
+
+            try {
+              await github.rest.git.getRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: `tags/${version}`
+              });
+              console.log(`Tag ${version} already exists.`);
+            } catch (error) {
+              if (error.status === 404) {
+                console.log(`Creating tag ${version}...`);
+                await github.rest.git.createRef({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  ref: `refs/tags/${version}`,
+                  sha: context.sha
+                });
+              } else {
+                throw error;
+              }
+            }
 
       - name: Build and Release
         env:
