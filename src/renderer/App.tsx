@@ -106,7 +106,7 @@ function Hello() {
         key={1}
         className="draggable-div"
       />
-      <div className="d-flex justify-content-center align-items-center border border-bottom">
+      <div className="d-flex justify-content-between align-items-center border border-bottom">
         <input
           style={{ display: 'none' }}
           value={timeFieldValue}
@@ -129,6 +129,21 @@ function Hello() {
         >
           {timeFieldValue}
         </b>
+        <div
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            alert('hello');
+          }}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              alert('hello');
+            }
+          }}
+        >
+          ⚙️
+        </div>
 
         {/* <button onClick={resetHandler}>@</button> */}
       </div>
