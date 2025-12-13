@@ -132,14 +132,14 @@ function Hello() {
 
         {/* <button onClick={resetHandler}>@</button> */}
       </div>
-      <button
+      {/* <button
         type="button"
         onClick={() => {
           window.electron.ipcRenderer.openSuccessWindow();
         }}
       >
         open
-      </button>
+      </button> */}
     </div>
   );
 }
