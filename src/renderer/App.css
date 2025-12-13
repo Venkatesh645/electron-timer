@@ -1,0 +1,155 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+* {
+  border: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: transparent;
+}
+
+#root {
+  background-color: aliceblue;
+  border: 1px solid black;
+}
+
+.form-control:focus {
+  border-color: none !important;
+  box-shadow: none !important;
+}
+
+body {
+  font-size: 10px;
+}
+
+.increment-group button {
+  padding: 0;
+  margin-left: 1px;
+  margin-right: 1px;
+  padding-left: 1px;
+  padding-right: 1px;
+}
+
+
+.draggable-div {
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
+}
+
+@keyframes ring {
+  0% {
+    transform: rotate(0);
+  }
+
+  1% {
+    transform: rotate(30deg);
+  }
+
+  3% {
+    transform: rotate(-28deg);
+  }
+
+  5% {
+    transform: rotate(34deg);
+  }
+
+  7% {
+    transform: rotate(-32deg);
+  }
+
+  9% {
+    transform: rotate(30deg);
+  }
+
+  11% {
+    transform: rotate(-28deg);
+  }
+
+  13% {
+    transform: rotate(26deg);
+  }
+
+  15% {
+    transform: rotate(-24deg);
+  }
+
+  17% {
+    transform: rotate(22deg);
+  }
+
+  19% {
+    transform: rotate(-20deg);
+  }
+
+  21% {
+    transform: rotate(18deg);
+  }
+
+  23% {
+    transform: rotate(-16deg);
+  }
+
+  25% {
+    transform: rotate(14deg);
+  }
+
+  27% {
+    transform: rotate(-12deg);
+  }
+
+  29% {
+    transform: rotate(10deg);
+  }
+
+  31% {
+    transform: rotate(-8deg);
+  }
+
+  33% {
+    transform: rotate(6deg);
+  }
+
+  35% {
+    transform: rotate(-4deg);
+  }
+
+  37% {
+    transform: rotate(2deg);
+  }
+
+  39% {
+    transform: rotate(-1deg);
+  }
+
+  41% {
+    transform: rotate(1deg);
+  }
+
+  43% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(0);
+  }
+}
+
+.ringing-bell {
+  display: inline-block;
+  animation: ring 4s .7s ease-in-out infinite;
+  transform-origin: 50% 4px;
+}
