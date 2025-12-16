@@ -49,6 +49,7 @@ const createSuccessWindow = async () => {
   const mainWindowHeight = Math.floor(height * 0.1);
 
   successWindow = new BrowserWindow({
+    resizable: false,
     alwaysOnTop: true,
     show: false,
     width: 120,
@@ -204,6 +205,7 @@ const createWindow = async () => {
   };
 
   mainWindow = new BrowserWindow({
+    resizable: false,
     show: false,
     width: 120,
     height: mainWindowHeight,
