@@ -15,6 +15,12 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
+function getScreenDimensions() {
+  const { screen } = require('electron');
+  const primaryDisplay = screen.getPrimaryDisplay();
+  return primaryDisplay.workAreaSize;
+}
+
 class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
@@ -48,7 +54,7 @@ const createSuccessWindow = async () => {
     width: 120,
     height: mainWindowHeight,
     x: width - 120,
-    y: height - mainWindowHeight-100,
+    y: height - mainWindowHeight - 100,
     roundedCorners: false,
     icon: getAssetPath('icon.png'),
     frame: false,
@@ -81,6 +87,73 @@ ipcMain.on('close-success-window', async () => {
   if (successWindow) {
     successWindow.close();
   }
+});
+
+let settingsWindow: BrowserWindow | null = null;
+
+const createSettingsWindow = async () => {
+  if (settingsWindow) {
+    settingsWindow.focus();
+    return;
+  }
+
+  const RESOURCES_PATH = app.isPackaged
+    ? path.join(process.resourcesPath, 'assets')
+    : path.join(__dirname, '../../assets');
+
+  const getAssetPath = (...paths: string[]): string => {
+    return path.join(RESOURCES_PATH, ...paths);
+  };
+
+  settingsWindow = new BrowserWindow({
+    show: false,
+    width: 600,
+    height: 400,
+    icon: getAssetPath('icon.png'),
+    autoHideMenuBar: true,
+    webPreferences: {
+      preload: app.isPackaged
+        ? path.join(__dirname, 'preload.js')
+        : path.join(__dirname, '../../.erb/dll/preload.js'),
+    },
+  });
+
+  settingsWindow.loadURL(`${resolveHtmlPath('index.html')}#/settings`);
+
+  settingsWindow.on('ready-to-show', () => {
+    if (!settingsWindow) {
+      throw new Error('"settingsWindow" is not defined');
+    }
+    settingsWindow.show();
+  });
+
+  settingsWindow.on('closed', () => {
+    settingsWindow = null;
+  });
+};
+
+ipcMain.on('open-settings-window', async () => {
+  createSettingsWindow();
+});
+
+ipcMain.on('close-settings-window', async () => {
+  if (settingsWindow) {
+    settingsWindow.close();
+  }
+});
+
+let store: any;
+
+import('electron-store').then(({ default: Store }) => {
+  store = new Store();
+});
+
+ipcMain.on('electron-store-get', async (event, val) => {
+  event.returnValue = store.get(val);
+});
+
+ipcMain.on('electron-store-set', async (event, key, val) => {
+  store.set(key, val);
 });
 
 ipcMain.on('ipc-example', async (event, arg) => {
@@ -190,11 +263,7 @@ app.on('window-all-closed', () => {
   }
 });
 
-function getScreenDimensions() {
-  const { screen } = require('electron');
-  const primaryDisplay = screen.getPrimaryDisplay()
-  return primaryDisplay.workAreaSize
-}
+
 
 app
   .whenReady()
