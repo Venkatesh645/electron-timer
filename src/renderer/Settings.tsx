@@ -5,10 +5,13 @@ export default function Settings() {
 
   useEffect(() => {
     // Load existing API path
-    const savedPath = window.electron.store.get('apiPath');
-    if (savedPath && typeof savedPath === 'string') {
-      setApiPath(savedPath);
-    }
+    const loadSettings = async () => {
+      const savedPath = await window.electron.store.get('apiPath');
+      if (savedPath && typeof savedPath === 'string') {
+        setApiPath(savedPath);
+      }
+    };
+    loadSettings();
   }, []);
 
   const handleSave = () => {

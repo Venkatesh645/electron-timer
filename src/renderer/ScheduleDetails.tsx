@@ -10,13 +10,12 @@ interface Schedule {
 export default function ScheduleDetails() {
   const [schedules, setSchedules] = useState<Schedule[]>([]);
 
-  const fetchSchedules = useCallback(() => {
-    const apiPath =
-      window.electron.store.get('apiPath') ||
-      'https://jsonplaceholder.typicode.com/todos';
+  const fetchSchedules = useCallback(async () => {
+    const apiPath = await window.electron.store.get('apiPath');
+    const url = apiPath || 'https://jsonplaceholder.typicode.com/todos';
 
-    if (apiPath && typeof apiPath === 'string') {
-      return fetch(apiPath)
+    if (url && typeof url === 'string') {
+      return fetch(url)
         .then((response) => response.json())
         .then((data) => setSchedules(data))
         .catch((error) => console.error(error));

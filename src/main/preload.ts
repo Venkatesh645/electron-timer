@@ -35,8 +35,8 @@ const electronHandler = {
     },
   },
   store: {
-    get(key: string) {
-      return ipcRenderer.sendSync('electron-store-get', key);
+    async get(key: string) {
+      return ipcRenderer.invoke('electron-store-get', key);
     },
     set(key: string, value: any) {
       ipcRenderer.send('electron-store-set', key, value);

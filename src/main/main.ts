@@ -143,17 +143,17 @@ ipcMain.on('close-settings-window', async () => {
   }
 });
 
-let store: any;
-
-import('electron-store').then(({ default: Store }) => {
-  store = new Store();
+const storePromise = import('electron-store').then(({ default: Store }) => {
+  return new Store();
 });
 
-ipcMain.on('electron-store-get', async (event, val) => {
-  event.returnValue = store.get(val);
+ipcMain.handle('electron-store-get', async (event, val) => {
+  const store = await storePromise;
+  return store.get(val);
 });
 
 ipcMain.on('electron-store-set', async (event, key, val) => {
+  const store = await storePromise;
   store.set(key, val);
 });
 
