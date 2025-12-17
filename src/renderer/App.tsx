@@ -3,6 +3,8 @@ import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { ProgressBar } from 'react-bootstrap';
 import './App.css';
 import moment from 'moment';
+import ScheduleDetails from './ScheduleDetails';
+import Settings from './Settings';
 
 const momentObj = moment;
 
@@ -132,13 +134,13 @@ function Hello() {
         <div
           style={{ cursor: 'pointer' }}
           onClick={() => {
-            alert('hello');
+            window.electron.ipcRenderer.openSettingsWindow();
           }}
           role="button"
           tabIndex={0}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
-              alert('hello');
+              window.electron.ipcRenderer.openSettingsWindow();
             }
           }}
         >
@@ -147,6 +149,7 @@ function Hello() {
 
         {/* <button onClick={resetHandler}>@</button> */}
       </div>
+      <ScheduleDetails />
       {/* <button
         type="button"
         onClick={() => {
@@ -164,6 +167,7 @@ export default function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Hello />} />
+        <Route path="/settings" element={<Settings />} />
         <Route path="/success" element={<Success />} />
       </Routes>
     </Router>

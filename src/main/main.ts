@@ -15,6 +15,12 @@ import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
+function getScreenDimensions() {
+  const { screen } = require('electron');
+  const primaryDisplay = screen.getPrimaryDisplay();
+  return primaryDisplay.workAreaSize;
+}
+
 class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
@@ -43,12 +49,13 @@ const createSuccessWindow = async () => {
   const mainWindowHeight = Math.floor(height * 0.1);
 
   successWindow = new BrowserWindow({
+    resizable: false,
     alwaysOnTop: true,
     show: false,
     width: 120,
     height: mainWindowHeight,
     x: width - 120,
-    y: height - mainWindowHeight-100,
+    y: height - mainWindowHeight - 100,
     roundedCorners: false,
     icon: getAssetPath('icon.png'),
     frame: false,
@@ -81,6 +88,73 @@ ipcMain.on('close-success-window', async () => {
   if (successWindow) {
     successWindow.close();
   }
+});
+
+let settingsWindow: BrowserWindow | null = null;
+
+const createSettingsWindow = async () => {
+  if (settingsWindow) {
+    settingsWindow.focus();
+    return;
+  }
+
+  const RESOURCES_PATH = app.isPackaged
+    ? path.join(process.resourcesPath, 'assets')
+    : path.join(__dirname, '../../assets');
+
+  const getAssetPath = (...paths: string[]): string => {
+    return path.join(RESOURCES_PATH, ...paths);
+  };
+
+  settingsWindow = new BrowserWindow({
+    show: false,
+    width: 600,
+    height: 400,
+    icon: getAssetPath('icon.png'),
+    autoHideMenuBar: true,
+    webPreferences: {
+      preload: app.isPackaged
+        ? path.join(__dirname, 'preload.js')
+        : path.join(__dirname, '../../.erb/dll/preload.js'),
+    },
+  });
+
+  settingsWindow.loadURL(`${resolveHtmlPath('index.html')}#/settings`);
+
+  settingsWindow.on('ready-to-show', () => {
+    if (!settingsWindow) {
+      throw new Error('"settingsWindow" is not defined');
+    }
+    settingsWindow.show();
+  });
+
+  settingsWindow.on('closed', () => {
+    settingsWindow = null;
+  });
+};
+
+ipcMain.on('open-settings-window', async () => {
+  createSettingsWindow();
+});
+
+ipcMain.on('close-settings-window', async () => {
+  if (settingsWindow) {
+    settingsWindow.close();
+  }
+});
+
+const storePromise = import('electron-store').then(({ default: Store }) => {
+  return new Store();
+});
+
+ipcMain.handle('electron-store-get', async (event, val) => {
+  const store = await storePromise;
+  return store.get(val);
+});
+
+ipcMain.on('electron-store-set', async (event, key, val) => {
+  const store = await storePromise;
+  store.set(key, val);
 });
 
 ipcMain.on('ipc-example', async (event, arg) => {
@@ -131,6 +205,7 @@ const createWindow = async () => {
   };
 
   mainWindow = new BrowserWindow({
+    resizable: false,
     show: false,
     width: 120,
     height: mainWindowHeight,
@@ -189,12 +264,6 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
-
-function getScreenDimensions() {
-  const { screen } = require('electron');
-  const primaryDisplay = screen.getPrimaryDisplay()
-  return primaryDisplay.workAreaSize
-}
 
 app
   .whenReady()

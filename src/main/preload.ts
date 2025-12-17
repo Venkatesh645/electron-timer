@@ -27,6 +27,20 @@ const electronHandler = {
     closeSuccessWindow() {
       ipcRenderer.send('close-success-window');
     },
+    openSettingsWindow() {
+      ipcRenderer.send('open-settings-window');
+    },
+    closeSettingsWindow() {
+      ipcRenderer.send('close-settings-window');
+    },
+  },
+  store: {
+    async get(key: string) {
+      return ipcRenderer.invoke('electron-store-get', key);
+    },
+    set(key: string, value: any) {
+      ipcRenderer.send('electron-store-set', key, value);
+    },
   },
 };
 
