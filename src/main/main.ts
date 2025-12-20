@@ -172,7 +172,7 @@ const isDebug =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
 
 if (isDebug) {
-  require('electron-debug').default({ devToolsMode: 'detach' });
+  require('electron-debug')({ devToolsMode: 'detach' });
 }
 
 const installExtensions = async () => {
