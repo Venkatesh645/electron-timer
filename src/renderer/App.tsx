@@ -1,4 +1,4 @@
-import { useRef, useState, ChangeEvent } from 'react';
+import { useRef, useState, ChangeEvent, useEffect } from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { ProgressBar } from 'react-bootstrap';
 import './App.css';
@@ -89,6 +89,21 @@ function Hello() {
     setTimeFieldValue(event.currentTarget.value);
     updateTimer(event.currentTarget.value);
   };
+
+  useEffect(() => {
+    // Listen for the success window closed event
+    const removeListener = window.electron.ipcRenderer.on(
+      'success-window-closed',
+      () => {
+        setProgressBarValue(0);
+        if (timerRef.current) clearInterval(timerRef.current);
+      },
+    );
+
+    return () => {
+      removeListener();
+    };
+  }, []);
 
   return (
     <div

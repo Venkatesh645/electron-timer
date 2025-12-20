@@ -88,6 +88,7 @@ ipcMain.on('close-success-window', async () => {
   if (successWindow) {
     successWindow.close();
   }
+  mainWindow?.webContents.send('success-window-closed');
 });
 
 let settingsWindow: BrowserWindow | null = null;
